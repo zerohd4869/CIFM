@@ -1,5 +1,5 @@
 # RIFM
-This repository contains the official code for ACL 2024 paper "Restricted Information Flow Maximization".
+This repository contains the official code for ACL 2024 paper "Learning Sufficient Representations via Conditional Information Flow Maximization".
 
 
 ## Highlights
