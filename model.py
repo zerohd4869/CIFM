@@ -36,7 +36,7 @@ class InfoPLM(nn.Module):
     """
 
     def __init__(self, pretrained_model_path="bert-base-chinese", pooling_method="cls",
-                 max_length=128, dropout=0.2, infonce_weight=0.0, infonce_temperature=0.1, mine_weight=0.0, mine_latent_dim=64,
+                 max_length=128, dropout=0.2, infonce_weight=0.0, infonce_temperature=0.1, mine_weight=0.0, mine_mar_weight=1, mine_latent_dim=64,
                  tasks_config=None, output_hidden_states=False, task_type="cls", module_print_flag=False, tokenizer_add_e_flag=False):
         super().__init__()
 
@@ -53,6 +53,7 @@ class InfoPLM(nn.Module):
         self.output_hidden_states = output_hidden_states
         self.infonce_weight = infonce_weight
         self.mine_weight = mine_weight
+        self.mine_mar_weight = mine_mar_weight
         self.task_type = task_type
 
         if self.infonce_weight > 0:
@@ -131,7 +132,7 @@ class InfoPLM(nn.Module):
 
                 joint = self.mine_nets[task.value](x_sample, y_sample)
                 marginal = torch.exp(self.mine_nets[task.value](x_sample, y_shuffle))
-                mine_loss = torch.mean(joint) - self.mine_weight2 * torch.log(torch.mean(marginal))
+                mine_loss = torch.mean(joint) - self.mine_mar_weight * torch.log(torch.mean(marginal))
 
                 print("w: {}, ce_loss: {}, mine_loss: {}".format(self.mine_weight, loss.item(), mine_loss.item()))
                 loss -= mine_loss * self.mine_weight

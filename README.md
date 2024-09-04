@@ -93,11 +93,19 @@ Then, refer to the template `/CIFM/datasets/new_dataset_script.py` to write the 
 
 During the training process for CIFM, the primary hyperparameters for adjustment along with their suggested ranges are as follows:
 ```
+# the default InfoNCE estimator used in IFM
 infonce_weight (beta): [0.01, 0.1, 1, 10] for classification, and [0.001, 0.01, 0.1] for regression
 infonce_t (tau): [0.1, 0.5, 1]
+
+# the alternative MINE estimator used in IFM
+mine_weight (beta): [0.01, 0.1, 1]
+mine_mar_weight: [1, 2]
+
+# the adversarial estimator used in CIM
 at_epsilon (epsilon): [0.1, 1, 5] 
 at_rate: [0.1, 1]
 
+# others
 weight_decay: [0, 0.001, 0.01] for classification, and [0] for regression
 batch_sampling_flag: False, True
 ```

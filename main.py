@@ -136,7 +136,6 @@ def train_minibatch(input_data, task, label, model, **kwargs):
                 model.zero_grad()
                 output_at, loss_at = model(input_data, label, task)[:2]
 
-                # if gradient_accumulation_steps > 0: loss_at = loss_at / gradient_accumulation_steps
                 loss_at.backward()
                 adv_trainer.restore_grad()
                 adv_trainer.restore()
@@ -177,12 +176,10 @@ def main():
     parser.add_argument("--output_hidden_states_flag", action="store_true", default=False, help="flag of output_hidden_states")
     parser.add_argument("--output_dir", type=str, default="./outputs/demo-v1/")
 
-    # parser.add_argument("--var_weight", type=float, default=0.0)
-    # parser.add_argument("--clu_weight", type=float, default=0.0)
-    # parser.add_argument("--normalize_flag", action="store_true", default=False, help="flag of normalize")
-    parser.add_argument('--infonce_weight', type=float, default=0.0, help='infonce_weight 0.05')
-    parser.add_argument("--infonce_t", type=float, default=0.0)
-    parser.add_argument('--mine_weight', type=float, default=0.0, help='mine_weight 0.05')
+    parser.add_argument('--infonce_weight', type=float, default=0.0, help='infonce_weight: 0.01, 0.1, 1')
+    parser.add_argument("--infonce_t", type=float, default=0.0, help='infonce_t: 0.1, 1')
+    parser.add_argument('--mine_weight', type=float, default=0.0, help='mine_weight: 0.01, 0.1, 1')
+    parser.add_argument('--mine_mar_weight', type=float, default=1.0, help='mine_mar_weight: 0, 1, 2')
     parser.add_argument("--mine_latent_dim", type=int, default=64, help="64/128")
 
     parser.add_argument("--at_method", default='fgm', type=str, help="(1) fgm; (2) pgd; (3) None")
@@ -221,17 +218,15 @@ def main():
                     tasks_config=tasks_config,
                     max_length=args.max_length,
                     dropout=args.dropout,
-                    # var_weight=args.var_weight,
-                    # clu_weight=args.clu_weight,
                     infonce_weight=args.infonce_weight,
                     infonce_temperature=args.infonce_t,
                     mine_weight=args.mine_weight,
+                    mine_mar_weight=args.mine_mar_weight,
                     mine_latent_dim=args.mine_latent_dim,
                     pooling_method=args.pooling_method,
                     task_type=args.task_type,
                     output_hidden_states=args.output_hidden_states_flag,
                     module_print_flag=args.module_print_flag,
-                    # normalize_flag=args.normalize_flag,
                     tokenizer_add_e_flag=args.tokenizer_add_e_flag)
     model.to(device)
 
@@ -277,7 +272,7 @@ def main():
     else:
         print("Starting training from scratch")
         lr_scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda step: 1.0)
-        warmup_scheduler = warmup.LinearWarmup(optimizer, warmup_period=max(1, int(sum(task2num.values()) * num_epochs * args.warmup_ratio)))  # 10
+        warmup_scheduler = warmup.LinearWarmup(optimizer, warmup_period=max(1, int(sum(task2num.values()) * num_epochs * args.warmup_ratio)))
 
     if args.from_checkpoint:
         num_epochs += initial_epoch - 1
