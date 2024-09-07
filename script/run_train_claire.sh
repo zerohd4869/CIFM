@@ -25,7 +25,7 @@ AT_RATE="0.1"
 AT_EPISION="0.1"
 
 L2="0"
-DP="0.2"
+DP="0"
 
 for task_name in ${ALL_TASK_NAME[@]}
 do

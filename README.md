@@ -1,5 +1,5 @@
 # CIFM
-This repository contains the official code for ACL 2024 paper "Representation Learning with Conditional Information Flow Maximization".
+This repository contains the official code for ACL 2024 paper "[Representation Learning with Conditional Information Flow Maximization](https://aclanthology.org/2024.acl-long.759/)".
 
 ## Highlights
 This paper introduces an information-theoretic representation learning framework CIFM to extract noise-invariant sufficient representations for the input data and target task. 
@@ -107,6 +107,7 @@ at_rate: [0.1, 1]
 
 # others
 weight_decay: [0, 0.001, 0.01] for classification, and [0] for regression
+dropout: [0, 0.2]
 batch_sampling_flag: False, True
 ```
 Other hyperparameters can be adjusted based on experimental conditions and specific task requirements, such as epochs, patience, warmup_ratio, bs, dropout, max_length, etc.

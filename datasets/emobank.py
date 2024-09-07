@@ -23,7 +23,7 @@ _LICENSE = ""
 
 
 class EmoBank_Dataset(datasets.GeneratorBasedBuilder):
-    """The EmoBank dataset for Dimensional emotion analysis task."""
+    """The EmoBank dataset for Dimensional Emotion Analysis task."""
 
     VERSION = datasets.Version("1.0.0")
 
